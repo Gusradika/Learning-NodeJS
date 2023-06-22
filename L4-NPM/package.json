@@ -1,0 +1,15 @@
+{
+  "name": "l4-npm",
+  "version": "1.0.0",
+  "description": "Belajar",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aditya Kesuma",
+  "license": "ISC",
+  "dependencies": {
+    "validator": "^13.9.0"
+  }
+}
