@@ -3,6 +3,7 @@
 // Fille System
 const fs = require("fs");
 const validator = require("validator");
+const yargs = require("yargs");
 
 // const readline = require("readline");
 // const rl = readline.createInterface({
@@ -78,10 +79,17 @@ const tulisPertanyaan = (pertanyaan) => {
   });
 };
 
-const simpanContact = (nama, email, noTelp) => {
-  const contact = { nama, email, noTelp };
+const loadContact = () => {
   const fileBuffer = fs.readFileSync("data/contacts.json", "utf-8");
   const contacts = JSON.parse(fileBuffer);
+  return contacts;
+};
+
+const simpanContact = (nama, email, noTelp) => {
+  const contact = { nama, email, noTelp };
+  //  const fileBuffer = fs.readFileSync("data/contacts.json", "utf-8");
+  //  const contacts = JSON.parse(fileBuffer);
+  const contacts = loadContact();
 
   // Cek Duplicate
   // 1 cek dulu dari JSON
@@ -110,6 +118,29 @@ const simpanContact = (nama, email, noTelp) => {
   fs.writeFileSync("data/contacts.json", JSON.stringify(contacts));
 };
 
+const listContact = () => {
+  const contacts = loadContact();
+  contacts.forEach((contact, i) => {
+    console.log(`${i + 1}. ${contact.nama} - ${contact.noTelp}`);
+  });
+};
+
+const detailContact = (nama) => {
+  const contacts = loadContact();
+
+  const contact = contacts.find(
+    (contact) => contact.nama.toLowerCase() === nama.toLowerCase()
+  );
+
+  if (!contact) {
+    console.log("Tidak diTemukan!");
+    return false;
+  } else {
+    console.log("Detail");
+    console.log(`${contact.nama} - ${contact.noTelp}`);
+  }
+};
+
 // not ES6 compatible. key dan value
 // module.exports = {tulisPertanyaan : tulisPertanyaan, simpanContact : simpanContact};
-module.exports = { tulisPertanyaan, simpanContact };
+module.exports = { tulisPertanyaan, simpanContact, listContact, detailContact };
