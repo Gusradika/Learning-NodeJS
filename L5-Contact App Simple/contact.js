@@ -2,12 +2,13 @@
 
 // Fille System
 const fs = require("fs");
+const validator = require("validator");
 
-const readline = require("readline");
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+// const readline = require("readline");
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
 
 // Mkdir make directory
 const dirPath = "./data";
@@ -44,29 +45,29 @@ if (!fs.existsSync(dataPath)) {
 
 //Resolve terjadi jika fullfilled
 // reject jika gagal
-const pertanyaan1 = () => {
-  return new Promise((resolve, reject) => {
-    rl.question("Masukan nama anda : ", (nama) => {
-      resolve(nama);
-    });
-  });
-};
+// const pertanyaan1 = () => {
+//   return new Promise((resolve, reject) => {
+//     rl.question("Masukan nama anda : ", (nama) => {
+//       resolve(nama);
+//     });
+//   });
+// };
 
-const pertanyaan2 = () => {
-  return new Promise((resolve, reject) => {
-    rl.question("Masukan email anda : ", (email) => {
-      resolve(email);
-    });
-  });
-};
+// const pertanyaan2 = () => {
+//   return new Promise((resolve, reject) => {
+//     rl.question("Masukan email anda : ", (email) => {
+//       resolve(email);
+//     });
+//   });
+// };
 
-const pertanyaan3 = () => {
-  return new Promise((resolve, reject) => {
-    rl.question("Masukan notelp anda : ", (notelp) => {
-      resolve(notelp);
-    });
-  });
-};
+// const pertanyaan3 = () => {
+//   return new Promise((resolve, reject) => {
+//     rl.question("Masukan notelp anda : ", (notelp) => {
+//       resolve(notelp);
+//     });
+//   });
+// };
 
 // 1 dinamic case
 const tulisPertanyaan = (pertanyaan) => {
@@ -81,8 +82,30 @@ const simpanContact = (nama, email, noTelp) => {
   const contact = { nama, email, noTelp };
   const fileBuffer = fs.readFileSync("data/contacts.json", "utf-8");
   const contacts = JSON.parse(fileBuffer);
+
+  // Cek Duplicate
+  // 1 cek dulu dari JSON
+  const duplikat = contacts.find((contact) => contact.nama === nama); // mencari kedalam json
+  if (duplikat) {
+    console.log("Contact sudah terdaftar, gunakan nama lain!.");
+
+    return false;
+  }
+
+  //cek email
+  if (email) {
+    if (!validator.isEmail(email)) {
+      console.log("Email tidak valid");
+      return false;
+    }
+  }
+
+  if (!validator.isMobilePhone(noTelp.toString(), "id-ID")) {
+    console.log("noTelp tidak valid");
+    return false;
+  }
+
   contacts.push(contact);
-  rl.close();
 
   fs.writeFileSync("data/contacts.json", JSON.stringify(contacts));
 };
